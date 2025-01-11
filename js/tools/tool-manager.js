@@ -2,7 +2,7 @@ import { Logger } from '../utils/logger.js';
 import { ApplicationError, ErrorCodes } from '../utils/error-boundary.js';
 import { GoogleSearchTool } from './google-search.js';
 import { WeatherTool } from './weather-tool.js';
-import { WebhookTool } from './webhook-tool.js'; // Import new tool
+import { WebhookTool } from './webhook-tool-task-check.js'; // Import new tool
 
 /**
  * Manages the registration and execution of tools.
