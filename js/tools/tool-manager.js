@@ -2,6 +2,7 @@ import { Logger } from '../utils/logger.js';
 import { ApplicationError, ErrorCodes } from '../utils/error-boundary.js';
 import { GoogleSearchTool } from './google-search.js';
 import { WeatherTool } from './weather-tool.js';
+import { WebhookTool } from './webhook-tool.js'; // Import new tool
 
 /**
  * Manages the registration and execution of tools.
@@ -22,6 +23,7 @@ export class ToolManager {
     registerDefaultTools() {
         this.registerTool('googleSearch', new GoogleSearchTool());
         this.registerTool('weather', new WeatherTool());
+        this.registerTool('webhook', new WebhookTool()); // Register the new tool
     }
 
     /**
@@ -53,7 +55,7 @@ export class ToolManager {
         
         this.tools.forEach((tool, name) => {
             if (tool.getDeclaration) {
-                if (name === 'weather') {
+                if (name === 'weather' || name === 'webhook') {
                     allDeclarations.push({
                         functionDeclarations: tool.getDeclaration()
                     });
@@ -82,9 +84,11 @@ export class ToolManager {
         Logger.info(`Handling tool call: ${name}`, { args });
 
         let tool;
-        if (name === 'get_weather_on_date') {
-            tool = this.tools.get('weather');
-        } else {
+          if (name === 'get_weather_on_date') {
+              tool = this.tools.get('weather');
+          } else if (name === 'check_task_status') {
+              tool = this.tools.get('webhook')
+          } else {
             tool = this.tools.get(name);
         }
 
@@ -113,4 +117,4 @@ export class ToolManager {
             };
         }
     }
-} 
+}
