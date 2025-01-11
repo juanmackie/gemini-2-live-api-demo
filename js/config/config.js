@@ -24,6 +24,16 @@ export const CONFIG = {
     // ROARM: {
     //     IP_ADDRESS: '192.168.1.4'
     // }
+    PINECONE: {
+        API_KEY: '',
+        ENVIRONMENT: '',
+        INDEX: ''
+    },
+    setPineconeConfig(apiKey, environment, index){
+        this.PINECONE.API_KEY = apiKey;
+        this.PINECONE.ENVIRONMENT = environment;
+        this.PINECONE.INDEX = index;
+    }
   };
   
-  export default CONFIG; 
+  export default CONFIG;
