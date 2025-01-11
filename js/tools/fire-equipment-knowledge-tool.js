@@ -1,35 +1,72 @@
+import { Pinecone } from '@pinecone-database/pinecone';
 import { Logger } from '../utils/logger.js';
+import { ApplicationError, ErrorCodes } from '../utils/error-boundary.js';
+
 
 /**
- * Represents a tool for managing and querying a knowledge base about fire equipment.
+ * Represents a tool for querying a Pinecone vector database about fire equipment.
  */
 export class FireEquipmentKnowledgeTool {
     constructor() {
-        this.knowledgeBase = ""; // Initialize an empty knowledge base
+        this.pinecone = null;
+        this.pineconeIndex = null;
+        this.initPinecone();
+    }
+
+
+    /**
+     * Initializes the Pinecone client and index.
+     * @throws {ApplicationError} Throws an error if any of the environment variables are missing
+     */
+     initPinecone() {
+        if (!process.env.PINECONE_API_KEY) {
+          throw new ApplicationError(
+            'Missing PINECONE_API_KEY environment variable',
+            ErrorCodes.MISSING_ENV_VAR
+          );
+        }
+    
+        if (!process.env.PINECONE_ENVIRONMENT) {
+            throw new ApplicationError(
+              'Missing PINECONE_ENVIRONMENT environment variable',
+              ErrorCodes.MISSING_ENV_VAR
+            );
+          }
+    
+          if (!process.env.PINECONE_INDEX) {
+            throw new ApplicationError(
+              'Missing PINECONE_INDEX environment variable',
+              ErrorCodes.MISSING_ENV_VAR
+            );
+          }
+        try {
+            this.pinecone = new Pinecone({
+                apiKey: process.env.PINECONE_API_KEY,
+                environment: process.env.PINECONE_ENVIRONMENT,
+            });
+
+             this.pineconeIndex = this.pinecone.index(process.env.PINECONE_INDEX);
+
+             Logger.info('Pinecone client initialized successfully.');
+
+        } catch (error) {
+            Logger.error('Pinecone client initialization failed', error);
+            throw new ApplicationError(
+                'Pinecone client initialization failed',
+                ErrorCodes.PINECONE_INIT_FAILED,
+                { originalError: error}
+            );
+        }
     }
 
     /**
      * Returns the tool declaration for the Gemini API.
-     * Defines two functions: one to add to the knowledge base, and one to query it.
+     * Defines a function to query the knowledge base.
      *
      * @returns {Object[]} An array of function declarations.
      */
     getDeclaration() {
         return [
-            {
-                name: "add_to_knowledge_base",
-                description: "Adds text to the fire equipment knowledge base.",
-                parameters: {
-                    type: "object",
-                    properties: {
-                        text: {
-                            type: "string",
-                            description: "The text to add to the knowledge base."
-                        }
-                    },
-                    required: ["text"]
-                }
-            },
             {
                 name: "query_knowledge_base",
                 description: "Queries the fire equipment knowledge base for information.",
@@ -48,11 +85,10 @@ export class FireEquipmentKnowledgeTool {
     }
 
     /**
-     * Executes the tool, either adding to the knowledge base or querying it.
+     * Executes the tool, querying the knowledge base.
      *
      * @param {Object} args - The arguments for the tool.
-     * @param {string} args.text - The text to add to the knowledge base (for add_to_knowledge_base).
-     * @param {string} args.query - The query to search in the knowledge base (for query_knowledge_base).
+     * @param {string} args.query - The query to search in the knowledge base.
      * @param {string} functionName - The name of the function to execute
      * @returns {Promise<Object>} A promise that resolves with the result of the operation.
      * @throws {Error} Throws an error if the tool execution fails.
@@ -60,14 +96,9 @@ export class FireEquipmentKnowledgeTool {
     async execute(args, functionName) {
         try {
             Logger.info(`Executing FireEquipmentKnowledgeTool: ${functionName}`, args);
-            
-            if (functionName === "add_to_knowledge_base") {
-               return this.addTextToKnowledgeBase(args.text);
-            }
-            else if (functionName === "query_knowledge_base"){
+            if (functionName === "query_knowledge_base"){
                return this.queryKnowledgeBase(args.query);
-            }
-             else{
+            } else{
                throw new Error (`Unknown function: ${functionName}`)
             }
 
@@ -77,45 +108,58 @@ export class FireEquipmentKnowledgeTool {
         }
     }
 
-      /**
-     * Adds text to the knowledge base.
-     * @param {string} text - The text to add.
-     * @returns {Promise<string>} - Returns a success message.
-     */
-    async addTextToKnowledgeBase(text){
-         this.knowledgeBase += text + "\n";
-         return `Added to knowledge base.`
-    }
-
     /**
-     * Queries the knowledge base.
+     * Queries the Pinecone vector database.
      * @param {string} query - The query string.
      * @returns {Promise<string>} - Returns the matching sections of the knowledge base or a no result message.
      */
     async queryKnowledgeBase(query) {
-      
-        if (!this.knowledgeBase) {
-            return "The knowledge base is empty.";
-          }
-      
-        const results = this.search(query);
-         
-      
-        if (results.length === 0) {
-          return `No information found related to "${query}".`;
+        if (!this.pineconeIndex) {
+            return "Pinecone index is not initialized.";
         }
-        
-        return results.join("\n");
+    
+       try {
+            // Assuming you have an embedding function
+            const queryVector = await this.generateEmbeddings(query);
+            const queryResponse = await this.pineconeIndex.query({
+                vector: queryVector,
+                topK: 3, // Get the top 3 matches
+            });
+    
+             if (!queryResponse || !queryResponse.matches || queryResponse.matches.length === 0) {
+              return `No information found related to "${query}".`;
+             }
+    
+            const results = queryResponse.matches.map(match => match.metadata.text).filter(Boolean);
+      
+            if (results.length === 0) {
+              return `No relevant information found related to "${query}".`;
+            }
+          
+            return results.join("\n");
+
+        } catch (error) {
+            Logger.error('Pinecone query failed', error);
+            throw new ApplicationError(
+                `Pinecone query failed: ${error.message}`,
+                 ErrorCodes.PINECONE_QUERY_FAILED,
+                 { originalError: error}
+              );
+        }
+      
     }
 
+
     /**
-     * Searches the knowledge base for the given query
-     * @param {string} query - The query string.
-     * @returns {Array<string>} - An array containing matching sections.
-    */
-    search(query) {
-        const queryLower = query.toLowerCase();
-        const sections = this.knowledgeBase.split('\n').filter(Boolean);
-        return sections.filter(section => section.toLowerCase().includes(queryLower))
+     * Placeholder for the embedding function.
+     * In a real implementation, you'd use an embedding model here.
+     * @param {string} text - The text to embed.
+     * @returns {Promise<number[]>} - A promise that resolves with the embedding vector.
+     */
+    async generateEmbeddings(text) {
+        // This is a placeholder; you need to replace this with an actual embedding model call.
+        // This is needed to convert your query text into vector embeddings.
+         const placeholderVector = Array.from({ length: 1536 }, () => Math.random()); // Example 1536-dimensional vector, typical for OpenAI
+         return Promise.resolve(placeholderVector);
     }
 }
