@@ -64,6 +64,7 @@ export class ToolManager {
                 } else if (name === 'fireEquipment') {
                    allDeclarations.push({
                          functionDeclarations: tool.getDeclaration()
+                    });
                 } else {
                     allDeclarations.push({ [name]: tool.getDeclaration() });
                 }
