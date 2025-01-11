@@ -35,7 +35,7 @@ export class WebhookTool {
     async execute(args) {
         try {
             const { taskId } = args;
-            const webhookUrl = 'https://n8n-production-ecbc.up.railway.app/webhook/fd2a848a-b713-421b-8986-a28a0d51e63c'; // Your webhook URL
+            const webhookUrl = 'https://n8n-production-ecbc.up.railway.app/webhook-test/842c8ac9-f4eb-412a-897b-ce73683a10c1'; // Your webhook URL
             const url = `${webhookUrl}?taskId=${taskId}`;
             Logger.info(`Webhook request: ${url}`);
 
