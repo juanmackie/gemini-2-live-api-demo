@@ -1,6 +1,7 @@
 import { Pinecone } from '@pinecone-database/pinecone';
 import { Logger } from '../utils/logger.js';
 import { ApplicationError, ErrorCodes } from '../utils/error-boundary.js';
+import CONFIG from '../../config.js';
 
 
 /**
@@ -19,33 +20,33 @@ export class FireEquipmentKnowledgeTool {
      * @throws {ApplicationError} Throws an error if any of the environment variables are missing
      */
      initPinecone() {
-        if (!process.env.PINECONE_API_KEY) {
+        if (!CONFIG.PINECONE.API_KEY) {
           throw new ApplicationError(
-            'Missing PINECONE_API_KEY environment variable',
+            'Missing PINECONE_API_KEY in config.js',
             ErrorCodes.MISSING_ENV_VAR
           );
         }
     
-        if (!process.env.PINECONE_ENVIRONMENT) {
+        if (!CONFIG.PINECONE.ENVIRONMENT) {
             throw new ApplicationError(
-              'Missing PINECONE_ENVIRONMENT environment variable',
+              'Missing PINECONE_ENVIRONMENT in config.js',
               ErrorCodes.MISSING_ENV_VAR
             );
           }
     
-          if (!process.env.PINECONE_INDEX) {
+          if (!CONFIG.PINECONE.INDEX) {
             throw new ApplicationError(
-              'Missing PINECONE_INDEX environment variable',
+              'Missing PINECONE_INDEX in config.js',
               ErrorCodes.MISSING_ENV_VAR
             );
           }
         try {
             this.pinecone = new Pinecone({
-                apiKey: process.env.PINECONE_API_KEY,
-                environment: process.env.PINECONE_ENVIRONMENT,
+                apiKey: CONFIG.PINECONE.API_KEY,
+                environment: CONFIG.PINECONE.ENVIRONMENT,
             });
 
-             this.pineconeIndex = this.pinecone.index(process.env.PINECONE_INDEX);
+             this.pineconeIndex = this.pinecone.index(CONFIG.PINECONE.INDEX);
 
              Logger.info('Pinecone client initialized successfully.');
 
