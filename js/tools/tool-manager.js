@@ -3,7 +3,6 @@ import { ApplicationError, ErrorCodes } from '../utils/error-boundary.js';
 import { GoogleSearchTool } from './google-search.js';
 import { WeatherTool } from './weather-tool.js';
 import { WebhookTool } from './webhook-tool-task-check.js'; // Import new tool
-import { FireEquipmentKnowledgeTool } from './fire-equipment-knowledge-tool.js' // Import your new tool
 
 /**
  * Manages the registration and execution of tools.
@@ -25,7 +24,6 @@ export class ToolManager {
         this.registerTool('googleSearch', new GoogleSearchTool());
         this.registerTool('weather', new WeatherTool());
         this.registerTool('webhook', new WebhookTool()); // Register the new tool
-        this.registerTool('fireEquipment', new FireEquipmentKnowledgeTool()); // Register your new tool
     }
 
     /**
@@ -92,8 +90,6 @@ export class ToolManager {
         let tool;
           if (name === 'get_weather_on_date') {
               tool = this.tools.get('weather');
-          } else if (name === 'add_to_knowledge_base' || name === 'query_knowledge_base') {
-            tool = this.tools.get('fireEquipment');
           } else if (name === 'check_task_status') {
               tool = this.tools.get('webhook')
           } else {
