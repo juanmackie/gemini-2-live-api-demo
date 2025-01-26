@@ -12,13 +12,13 @@ export class DefectQuoteWebhookTool { // Rename the class
     getDeclaration() {
         return [{
             name: "defect_quote_status_checker",
-            description: "Checks the status of a defect quote using the defect quote number (e.g., D-1234).",
+            description: "Checks the status of a defect quote using the defect quote number (e.g., Q-1234).",
             parameters: {
                 type: "object",
                 properties: {
                     defectquotenum: {
                         type: "string",
-                        description: "The defect quote number to check status for (e.g., D-1234)."
+                        description: "The defect quote number to check status for (e.g., Q-1234)."
                     }
                 },
                 required: ["defectquotenum"]
