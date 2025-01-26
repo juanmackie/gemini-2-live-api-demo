@@ -35,7 +35,7 @@ export class DefectQuoteWebhookTool { // Rename the class
     async execute(args) {
         try {
             const { defectquotenum } = args;
-            const webhookUrl = 'https://n8n-production-ecbc.up.railway.app/webhook-test/415b5710-7c96-4445-a7f8-a19706890544';
+            const webhookUrl = 'https://n8n-production-ecbc.up.railway.app/webhook/415b5710-7c96-4445-a7f8-a19706890544';
             const url = `${webhookUrl}?defectquotenum=${encodeURIComponent(defectquotenum)}`;
             Logger.info(`Defect quote status check: ${url}`);
 
