@@ -4,7 +4,7 @@ import { ApplicationError, ErrorCodes } from '../utils/error-boundary.js';
 /**
  * Represents a tool for making requests to a webhook URL.
  */
-export class WebhookTool {
+export class TaskWebhookTool { // Match the imported name
     /**
      * Returns the tool declaration for the Gemini API.
      * @returns {Object} An object defining the tool's function.
