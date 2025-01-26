@@ -4,7 +4,7 @@ import { ApplicationError, ErrorCodes } from '../utils/error-boundary.js';
 /**
  * Represents a tool for checking defect quote status via webhook.
  */
-export class WebhookTool {
+export class DefectQuoteWebhookTool { // Rename the class
     /**
      * Returns the tool declaration for defect quote status checking.
      * @returns {Object} An object defining the tool's function.
