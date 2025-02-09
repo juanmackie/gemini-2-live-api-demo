@@ -4,7 +4,7 @@ import { GoogleSearchTool } from './google-search.js';
 import { WeatherTool } from './weather-tool.js';
 import { TaskWebhookTool } from './webhook-tool-task-check.js';
 import { DefectQuoteWebhookTool } from './webhook-tool-defect-check.js'; // Separate import for clarity
-import { DefectQuoteOutputTaskWebhookTool } from './defect_quote_output_task.js'; // Import the new tool
+import { defect_quote_output_taskTool } from './defect_quote_output_task.js'; // Corrected import - Class name matches
 
 export class ToolManager {
     constructor() {
@@ -17,7 +17,7 @@ export class ToolManager {
         this.registerTool('weather', new WeatherTool());
         this.registerTool('task_status', new TaskWebhookTool()); // Task checking tool
         this.registerTool('defect_quote', new DefectQuoteWebhookTool()); // Defect quote tool
-        this.registerTool('defect_quote_output_task', new DefectQuoteOutputTaskWebhookTool()); // New tool for defect quote output task
+        this.registerTool('defect_quote_output_task', new defect_quote_output_taskTool()); // Registered new tool - class name matches
     }
 
     registerTool(name, toolInstance) {
@@ -38,9 +38,12 @@ export class ToolManager {
             if (tool.getDeclaration) {
                 // Handle multi-function tools
                 if (['weather', 'task_status', 'defect_quote', 'defect_quote_output_task'].includes(name)) { // Include the new tool here
-                    allDeclarations.push({
-                        functionDeclarations: tool.getDeclaration()
-                    });
+                    const declarations = tool.getDeclaration();
+                    if (Array.isArray(declarations)) { // Check if getDeclaration returns an array
+                        allDeclarations.push(...declarations.map(functionDeclaration => ({ functionDeclarations: [functionDeclaration] }))); // Wrap each declaration in functionDeclarations
+                    } else {
+                        allDeclarations.push({ functionDeclarations: [declarations] }); // Wrap single declaration in functionDeclarations
+                    }
                 } else {
                     allDeclarations.push({ [name]: tool.getDeclaration() });
                 }
@@ -65,7 +68,7 @@ export class ToolManager {
             case 'defect_quote_status_checker':
                 tool = this.tools.get('defect_quote');
                 break;
-            case 'defect_quote_output_task_checker': // Add case for the new tool function name
+            case 'defect_quote_output_task_checker': // Correct function name to match declaration
                 tool = this.tools.get('defect_quote_output_task');
                 break;
             default:
