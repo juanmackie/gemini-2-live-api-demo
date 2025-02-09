@@ -2,16 +2,16 @@ import { Logger } from '../utils/logger.js';
 import { ApplicationError, ErrorCodes } from '../utils/error-boundary.js';
 
 /**
- * Represents a tool for checking defect quote status via webhook.
+ * Represents a tool for checking the task that is output from an actioned defect quote
  */
-export class DefectQuoteWebhookTool { // Rename the class
+export class defect_quote_output_taskTool { // Rename the class
     /**
-     * Returns the tool declaration for defect quote status checking.
+     * Returns the tool declaration for defect_quote_output_task checking
      * @returns {Object} An object defining the tool's function.
      */
     getDeclaration() {
         return [{
-            name: "defect_quote_status_checker",
+            name: "defect_quote_output_task",
             description: "Finds the output task from a actioned defect quote. Supply the webhook the defect quote number eg: Q-12345 and returns task with approved scope of works",
             parameters: {
                 type: "object",
@@ -27,7 +27,7 @@ export class DefectQuoteWebhookTool { // Rename the class
     }
 
     /**
-     * Executes the webhook request for defect quote status.
+     * Executes the webhook request for finding the task from an anctioned defect quote
      * @param {Object} args - The arguments containing the defect quote number.
      * @returns {Promise<Object>} - A promise that resolves with the webhook response.
      * @throws {ApplicationError} If the request fails or there's an error.
@@ -37,7 +37,7 @@ export class DefectQuoteWebhookTool { // Rename the class
             const { defectquotenum } = args;
             const webhookUrl = 'https://n8n-production-ecbc.up.railway.app/webhook/9b53d35f-c910-4593-8437-1e6bfdd485c4';
             const url = `${webhookUrl}?defectquotenum=${encodeURIComponent(defectquotenum)}`;
-            Logger.info(`Defect quote status check: ${url}`);
+            Logger.info(`defect_quote_output_task: ${url}`);
 
             const response = await fetch(url, {
                 method: 'GET',
@@ -49,19 +49,19 @@ export class DefectQuoteWebhookTool { // Rename the class
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new ApplicationError(
-                    `Defect quote check failed: ${response.status} - ${errorText}`,
+                    `Defect quote output task check failed: ${response.status} - ${errorText}`,
                     ErrorCodes.API_REQUEST_FAILED,
                     { url, status: response.status, statusText: response.statusText, body: errorText }
                 );
             }
 
             const data = await response.json();
-            Logger.info('Defect quote status response', data);
+            Logger.info('Defect quote putput task status response', data);
             return data;
         } catch (error) {
-            Logger.error('Defect quote check failed', error);
+            Logger.error('Defect quote output task check failed', error);
             throw new ApplicationError(
-                `Defect quote status check failed: ${error.message}`,
+                `Defect quote output task status check failed: ${error.message}`,
                 ErrorCodes.API_REQUEST_FAILED,
                 { originalError: error }
             );
