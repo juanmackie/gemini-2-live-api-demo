@@ -12,7 +12,7 @@ export class TaskWebhookTool { // Match the imported name
     getDeclaration() {
         return [{
             name: "check_task_status",
-            description: "Checks the status of a task using a given task ID.",
+            description: "Checks the status of a task using a given task ID.Only send numbers to the webhook,if a user gives you an ID eg. T-12345 just send 12345 to the webhook",
             parameters: {
                 type: "object",
                 properties: {
