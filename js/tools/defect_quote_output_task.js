@@ -13,7 +13,7 @@ export class defect_quote_output_taskTool { // Class name is correct and consist
     getDeclaration() {
         return [{
             name: "defect_quote_output_task_checker", // Function name for this tool - aligned with tool-manager.js
-            description: "Finds the output task from a actioned defect quote. Supply the webhook the defect quote number eg: Q-12345 and returns task with approved scope of works",
+            description: "Finds the output task from a actioned defect quote.This allows checking of tasks originating from actioned defect quotes. Supply the webhook the defect quote number eg: Q-12345 and returns task with approved scope of works",
             parameters: {
                 type: "object",
                 properties: {
