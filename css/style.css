@@ -1,25 +1,28 @@
 /* Theme variables */
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&display=swap');
+
 :root[data-theme="dark"] {
-    --primary-color: #808080;
-    --secondary-color: #606060;
-    --danger-color: #404040;
-    --background-color: #121212;
-    --surface-color: #202020;
-    --border-color: #303030;
-    --text-color: #f0f0f0;
-    --text-secondary: #a0a0a0;
-    --shadow-color: rgba(0, 0, 0, 0.5);
-    --border-radius: 4px;
-    --spacing-sm: 8px;
-    --spacing-md: 16px;
-    --spacing-lg: 24px;
-     --primary-color-rgb: 128, 128, 128;
+  --primary-color: #0ff; /* Bright cyan */
+  --secondary-color: #f0f; /* Magenta */
+  --danger-color: #ff4040;
+  --background-color: #080808; /* Almost black */
+  --surface-color: #1a1a1a;
+  --border-color: #333;
+  --text-color: #eee;
+  --text-secondary: #aaa;
+  --shadow-color: rgba(0, 255, 255, 0.3); /* Cyan glow */
+  --border-radius: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --primary-color-rgb: 0, 255, 255;
 }
 
+/* Light theme is not needed for cyberpunk, but keeping for completeness */
 :root[data-theme="light"] {
-    --primary-color: #808080;
-    --secondary-color: #606060;
-    --danger-color: #404040;
+    --primary-color: #0ff;
+    --secondary-color: #f0f;
+    --danger-color: #ff4040;
     --background-color: #f0f0f0;
     --surface-color: #fff;
     --border-color: #ccc;
@@ -30,7 +33,7 @@
     --spacing-sm: 8px;
     --spacing-md: 16px;
     --spacing-lg: 24px;
-    --primary-color-rgb: 128, 128, 128;
+    --primary-color-rgb: 0, 255, 255;
 }
 
 /* Set dark theme as default */
@@ -40,15 +43,15 @@
 
 :root:not([data-theme]) {
     color-scheme: dark;
-    --primary-color: #808080;
-    --secondary-color: #606060;
-    --danger-color: #404040;
-    --background-color: #121212;
-    --surface-color: #202020;
-    --border-color: #303030;
-    --text-color: #f0f0f0;
-    --text-secondary: #a0a0a0;
-    --shadow-color: rgba(0, 0, 0, 0.5);
+    --primary-color: #0ff;
+    --secondary-color: #f0f;
+    --danger-color: #ff4040;
+    --background-color: #080808;
+    --surface-color: #1a1a1a;
+    --border-color: #333;
+    --text-color: #eee;
+    --text-secondary: #aaa;
+    --shadow-color: rgba(0, 255, 255, 0.3);
     --border-radius: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
@@ -63,7 +66,7 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+    font-family: 'Rajdhani', sans-serif;
     line-height: 1.5;
     color: var(--text-color);
     background-color: var(--background-color);
@@ -125,7 +128,7 @@ body {
 
 #connect-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */ /* Removed shadow */
 }
 
 #connect-button.connected {
@@ -137,22 +140,24 @@ body {
     background: var(--surface-color);
     padding: var(--spacing-lg);
     border-radius: var(--border-radius);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: none; /* Removed shadow */
     display: none;
 }
 
 #config-container.active {
-    display: block;
+  display: block;
 }
 
 .config-wrapper {
-    display: grid;
-    gap: var(--spacing-md);
-    max-width: 600px;
-    margin: 0 auto;
+  display: grid;
+  gap: var(--spacing-md);
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-#voice-select, #sample-rate-input, #system-instruction {
+#voice-select,
+#sample-rate-input,
+#system-instruction {
     padding: var(--spacing-md);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
@@ -182,7 +187,7 @@ body {
 
 #apply-config:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */ /* Removed shadow */
 }
 
 /* Chat interface */
@@ -196,7 +201,7 @@ body {
 .logs-wrapper {
     background: var(--surface-color);
     border: 1px solid var(--border-color);
-    box-shadow: 0 2px 8px var(--shadow-color);
+    /* box-shadow: 0 2px 8px var(--shadow-color); */ /* Removed shadow */
     overflow: hidden;
     transition: max-height 0.3s ease;
 }
@@ -225,17 +230,17 @@ body {
 
 .log-entry.system {
     color: var(--secondary-color);
-    background: rgba(52, 168, 83, 0.15);
+    background: rgba(255, 0, 255, 0.1); /* Magenta tint */
 }
 
 .log-entry.user {
     color: var(--primary-color);
-    background: rgba(66, 133, 244, 0.15);
+    background: rgba(0, 255, 255, 0.1); /* Cyan tint */
 }
 
 .log-entry.ai {
     color: var(--danger-color);
-    background: rgba(234, 67, 53, 0.15);
+    background: rgba(255, 64, 64, 0.1); /* Red tint */
 }
 
 /* Input controls */
@@ -245,7 +250,7 @@ body {
     background: var(--surface-color);
     padding: var(--spacing-md);
     border-radius: var(--border-radius);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */ /* Removed shadow */
 }
 
 #message-input {
@@ -273,7 +278,7 @@ body {
 
 .action-buttons button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */ /* Removed shadow */
 }
 
 /* Audio visualizers */
@@ -288,7 +293,7 @@ body {
     background: var(--surface-color);
     padding: var(--spacing-md);
     border-radius: var(--border-radius);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */ /* Removed shadow */
 }
 
 .visualizer-container label {
@@ -325,7 +330,7 @@ body {
     background: var(--surface-color);
     border-radius: var(--border-radius);
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); */ /* Removed shadow */
     width: 480px;
     height: 360px;
     transition: all 0.3s ease;
@@ -338,7 +343,7 @@ body {
     background: var(--surface-color);
     border-radius: var(--border-radius);
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); */ /* Removed shadow */
     width: 480px;
     height: 360px;
     transition: all 0.3s ease;
@@ -404,7 +409,7 @@ body {
         bottom: 0;
         background: var(--surface-color);
         padding: var(--spacing-md);
-        box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+        /* box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1); */ /* Removed shadow */
         z-index: 100;
     }
 
@@ -462,7 +467,7 @@ body {
 
 #config-toggle:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */ /* Removed shadow */
 }
 
 #config-toggle.active {
@@ -490,7 +495,7 @@ body {
 
 #theme-toggle:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px var(--shadow-color);
+    /* box-shadow: 0 4px 8px var(--shadow-color); */ /* Removed shadow */
 }
 
 /* Update input styles */
@@ -500,7 +505,7 @@ input, select, textarea {
     border-color: var(--border-color);
 }
 
-input::placeholder, 
+input::placeholder,
 textarea::placeholder {
     color: var(--text-secondary);
 }
@@ -511,7 +516,7 @@ textarea::placeholder {
     padding: var(--spacing-md);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
-    background: rgba(var(--primary-color-rgb), 0.1);
+    background: none; /* Removed background */
 }
 
 .preset-sets h3 {
@@ -541,7 +546,7 @@ textarea::placeholder {
 
 .preset-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px var(--shadow-color);
+    /* box-shadow: 0 4px 8px var(--shadow-color); */ /* Removed shadow */
     border-color: var(--primary-color);
 }
 
