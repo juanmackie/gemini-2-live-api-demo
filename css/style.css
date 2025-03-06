@@ -1,36 +1,36 @@
 /* Theme variables */
 :root[data-theme="dark"] {
-    --primary-color: #4285f4;
-    --secondary-color: #34a853;
-    --danger-color: #ea4335;
-    --background-color: #1a1a1a;
-    --surface-color: #2d2d2d;
-    --border-color: #404040;
-    --text-color: #e0e0e0;
+    --primary-color: #808080;
+    --secondary-color: #606060;
+    --danger-color: #404040;
+    --background-color: #121212;
+    --surface-color: #202020;
+    --border-color: #303030;
+    --text-color: #f0f0f0;
     --text-secondary: #a0a0a0;
-    --shadow-color: rgba(0, 0, 0, 0.3);
-    --border-radius: 8px;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --border-radius: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
     --spacing-lg: 24px;
-    --primary-color-rgb: 66, 133, 244;
+     --primary-color-rgb: 128, 128, 128;
 }
 
 :root[data-theme="light"] {
-    --primary-color: #4285f4;
-    --secondary-color: #34a853;
-    --danger-color: #ea4335;
+    --primary-color: #808080;
+    --secondary-color: #606060;
+    --danger-color: #404040;
     --background-color: #f0f0f0;
     --surface-color: #fff;
     --border-color: #ccc;
     --text-color: #333;
     --text-secondary: #666;
-    --shadow-color: rgba(0, 0, 0, 0.1);
-    --border-radius: 8px;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --border-radius: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
     --spacing-lg: 24px;
-    --primary-color-rgb: 66, 133, 244;
+    --primary-color-rgb: 128, 128, 128;
 }
 
 /* Set dark theme as default */
@@ -40,16 +40,16 @@
 
 :root:not([data-theme]) {
     color-scheme: dark;
-    --primary-color: #4285f4;
-    --secondary-color: #34a853;
-    --danger-color: #ea4335;
-    --background-color: #1a1a1a;
-    --surface-color: #2d2d2d;
-    --border-color: #404040;
-    --text-color: #e0e0e0;
+    --primary-color: #808080;
+    --secondary-color: #606060;
+    --danger-color: #404040;
+    --background-color: #121212;
+    --surface-color: #202020;
+    --border-color: #303030;
+    --text-color: #f0f0f0;
     --text-secondary: #a0a0a0;
-    --shadow-color: rgba(0, 0, 0, 0.3);
-    --border-radius: 8px;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --border-radius: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
     --spacing-lg: 24px;
