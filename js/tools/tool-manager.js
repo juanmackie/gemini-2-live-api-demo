@@ -45,7 +45,8 @@ export class ToolManager {
                         allDeclarations.push({ functionDeclarations: [declarations] }); // Wrap single declaration in functionDeclarations
                     }
                 } else {
-                    allDeclarations.push({ [name]: tool.getDeclaration() });
+                    // Ensure single-function tools are also wrapped correctly
+                    allDeclarations.push({ functionDeclarations: [tool.getDeclaration()] });
                 }
             }
         });
