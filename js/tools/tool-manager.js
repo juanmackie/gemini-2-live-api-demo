@@ -1,73 +1,103 @@
-/**
- * Managing class where tools can be registered for easier use
- * Each tool must implement execute() and getDeclaration() methods.
- */
+import { Logger } from '../utils/logger.js';
+import { ApplicationError, ErrorCodes } from '../utils/error-boundary.js';
+import { GoogleSearchTool } from './google-search.js';
+import { WeatherTool } from './weather-tool.js';
+import { TaskWebhookTool } from './webhook-tool-task-check.js';
+import { DefectQuoteWebhookTool } from './webhook-tool-defect-check.js'; // Separate import for clarity
+import { defect_quote_output_taskTool } from './defect_quote_output_task.js'; // Corrected import - Class name matches
 
 export class ToolManager {
-    /**
-     * Initializes a new ToolManager instance for getting registering, getting declarations, and executing tools.
-     */
     constructor() {
         this.tools = new Map();
+        this.registerDefaultTools();
     }
 
-    /**
-     * Registers a new tool in the tool registry.
-     * @param {string} name - Unique identifier for the tool
-     * @param {Object} toolInstance - Instance of the tool implementing required interface
-     */
+    registerDefaultTools() {
+        this.registerTool('googleSearch', new GoogleSearchTool());
+        this.registerTool('weather', new WeatherTool());
+        this.registerTool('task_status', new TaskWebhookTool()); // Task checking tool
+        this.registerTool('defect_quote', new DefectQuoteWebhookTool()); // Defect quote tool
+        this.registerTool('defect_quote_output_task', new defect_quote_output_taskTool()); // Registered new tool - class name matches
+    }
+
     registerTool(name, toolInstance) {
         if (this.tools.has(name)) {
-            console.warn(`Tool ${name} is already registered`);
-            return;
+            throw new ApplicationError(
+                `Tool ${name} is already registered`,
+                ErrorCodes.INVALID_STATE
+            );
         }
         this.tools.set(name, toolInstance);
-        console.info(`Tool ${name} registered successfully`);
+        Logger.info(`Tool ${name} registered successfully`);
     }
 
-    /**
-     * Collects and returns declarations from all registered tools.
-     * @returns {Array<Object>} Array of tool declarations for registered tools
-     */
     getToolDeclarations() {
         const allDeclarations = [];
-        
-        this.tools.forEach((tool) => {
+
+        this.tools.forEach((tool, name) => {
             if (tool.getDeclaration) {
-                allDeclarations.push(tool.getDeclaration());
-            } else {
-                console.warn(`Tool ${tool.name} does not have a getDeclaration method`);
+                // Handle multi-function tools
+                if (['weather', 'task_status', 'defect_quote', 'defect_quote_output_task'].includes(name)) { // Include the new tool here
+                    const declarations = tool.getDeclaration();
+                    if (Array.isArray(declarations)) { // Check if getDeclaration returns an array
+                        allDeclarations.push(...declarations.map(functionDeclaration => ({ functionDeclarations: [functionDeclaration] }))); // Wrap each declaration in functionDeclarations
+                    } else {
+                        allDeclarations.push({ functionDeclarations: [declarations] }); // Wrap single declaration in functionDeclarations
+                    }
+                } else {
+                    allDeclarations.push({ [name]: tool.getDeclaration() });
+                }
             }
         });
 
         return allDeclarations;
     }
 
-    /**
-     * Parses tool arguments and runs execute() method of the requested tool.
-     * @param {Object} functionCall - Function call specification
-     */
     async handleToolCall(functionCall) {
         const { name, args, id } = functionCall;
-        console.info(`Handling tool call: ${name}`, { args });
+        Logger.info(`Handling tool call: ${name}`, { args });
 
-        const tool = this.tools.get(name);
+        let tool;
+        switch(name) {
+            case 'get_weather_on_date':
+                tool = this.tools.get('weather');
+                break;
+            case 'check_task_status':
+                tool = this.tools.get('task_status');
+                break;
+            case 'defect_quote_status_checker':
+                tool = this.tools.get('defect_quote');
+                break;
+            case 'defect_quote_output_task_checker': // Correct function name to match declaration
+                tool = this.tools.get('defect_quote_output_task');
+                break;
+            default:
+                tool = this.tools.get(name);
+        }
+
+        if (!tool) {
+            throw new ApplicationError(
+                `Unknown tool: ${name}`,
+                ErrorCodes.INVALID_PARAMETER
+            );
+        }
+
         try {
             const result = await tool.execute(args);
             return {
-                output: result,
-                id: id,
-                error: null
-            }
-
+                functionResponses: [{
+                    response: { output: result },
+                    id
+                }]
+            };
         } catch (error) {
-            console.error(`Tool execution failed: ${name}`, error);
+            Logger.error(`Tool execution failed: ${name}`, error);
             return {
-                output: null,
-                id: id,
-                error: error.message
+                functionResponses: [{
+                    response: { error: error.message },
+                    id
+                }]
             };
         }
     }
-
 }
