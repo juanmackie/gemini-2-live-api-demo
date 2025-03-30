@@ -121,8 +121,19 @@ export class GeminiAgent{
     // TODO: Handle multiple function calls
     async handleToolCall(toolCall) {
         const functionCall = toolCall.functionCalls[0];
-        const response = await this.toolManager.handleToolCall(functionCall);
-        await this.client.sendToolResponse(response);
+        // Execute the tool via ToolManager
+        const toolManagerResponse = await this.toolManager.handleToolCall(functionCall);
+        
+        // Extract the actual response data needed by client.sendToolResponse
+        const functionResponseData = toolManagerResponse.functionResponses[0];
+        const responseToSend = {
+            id: functionResponseData.id,
+            output: functionResponseData.response.output,
+            error: functionResponseData.response.error // Will be undefined if no error
+        };
+
+        // Send the correctly formatted response
+        await this.client.sendToolResponse(responseToSend);
     }
 
     /**

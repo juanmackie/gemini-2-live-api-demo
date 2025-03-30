@@ -44,6 +44,4 @@ geminiAgent.on('turn_complete', () => {
     chatManager.finalizeStreamingMessage();
 });
 
-geminiAgent.connect();
-
 setupEventListeners(geminiAgent);
