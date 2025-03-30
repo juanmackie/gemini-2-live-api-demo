@@ -55,8 +55,13 @@ export class DefectQuoteWebhookTool { // Rename the class
                 );
             }
 
-            const data = await response.json();
-            Logger.info('Defect quote status response', data);
+            // Clone the response to read the text without consuming the body
+            const responseClone = response.clone();
+            const responseText = await responseClone.text();
+            Logger.info('Raw defect quote status response text:', responseText); // Log the raw text
+
+            const data = await response.json(); // Parse JSON from the original response
+            Logger.info('Defect quote status response JSON:', data); // Log the parsed JSON
             return data;
         } catch (error) {
             Logger.error('Defect quote check failed', error);

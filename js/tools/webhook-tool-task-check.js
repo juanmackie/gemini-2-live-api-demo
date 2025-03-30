@@ -55,8 +55,13 @@ export class TaskWebhookTool { // Match the imported name
                 );
             }
 
-            const data = await response.json();
-            Logger.info('Webhook response', data);
+            // Clone the response to read the text without consuming the body
+            const responseClone = response.clone();
+            const responseText = await responseClone.text();
+            Logger.info('Raw webhook response text:', responseText); // Log the raw text
+
+            const data = await response.json(); // Parse JSON from the original response
+            Logger.info('Webhook response JSON:', data); // Log the parsed JSON
             return data;
         } catch (error) {
             Logger.error('Webhook request failed', error);

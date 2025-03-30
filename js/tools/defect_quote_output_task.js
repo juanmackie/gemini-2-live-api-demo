@@ -56,8 +56,13 @@ export class defect_quote_output_taskTool { // Class name is correct and consist
                 );
             }
 
-            const data = await response.json();
-            Logger.info('Defect quote putput task status response', data); // Typo in log message 'putput' -> 'output'
+            // Clone the response to read the text without consuming the body
+            const responseClone = response.clone();
+            const responseText = await responseClone.text();
+            Logger.info('Raw defect quote output task response text:', responseText); // Log the raw text
+
+            const data = await response.json(); // Parse JSON from the original response
+            Logger.info('Defect quote output task status response JSON:', data); // Log the parsed JSON (Typo fixed)
             return data;
         } catch (error) {
             Logger.error('Defect quote output task check failed', error);
