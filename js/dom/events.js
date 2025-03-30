@@ -142,7 +142,15 @@ export function setupEventListeners(agent) {
     });
 
     // Settings button click
-    elements.settingsBtn.addEventListener('click', () => settingsManager.show());
+    elements.settingsBtn.addEventListener('click', () => {
+        const password = prompt("Please enter the password to access settings:");
+        // TODO: Use a more secure method for password storage and validation
+        if (password === "password123") {
+            settingsManager.show();
+        } else if (password !== null) { // Only alert if the user entered something incorrect, not if they cancelled
+            alert("Incorrect password.");
+        }
+    });
 }
 
 // Initialize settings
