@@ -71,6 +71,15 @@ export class GeminiWebsocketClient extends EventEmitter {
                     console.error('Non-blob message received', event);
                 }
             });
+
+            // Log when the connection closes
+            ws.addEventListener('close', (event) => {
+                console.warn(`🔗 WebSocket connection closed. Code: ${event.code}, Reason: ${event.reason || 'No reason given'}`);
+                this.ws = null; // Ensure ws is nulled on close
+                this.isConnecting = false;
+                this.connectionPromise = null;
+                this.emit('close', event); // Emit a close event
+            });
         });
 
         return this.connectionPromise;
@@ -233,7 +242,21 @@ export class GeminiWebsocketClient extends EventEmitter {
      * @param {Object} json - The JSON object to send.
      */
 
-    async sendJSON(json) {        
+    async sendJSON(json) {
+        // Log the readyState before attempting to send
+        if (!this.ws) {
+            console.error(`[${this.name}] Attempted to send JSON but WebSocket is null.`);
+            // Throwing an error might be better, but logging helps diagnose first
+            // throw new Error(`WebSocket is not initialized.`);
+            return; // Prevent further execution if ws is null
+        }
+        console.debug(`[${this.name}] Attempting sendJSON. ReadyState: ${this.ws.readyState}`);
+        if (this.ws.readyState !== WebSocket.OPEN) {
+             console.error(`[${this.name}] Attempted to send JSON when WebSocket is not OPEN. State: ${this.ws.readyState}`);
+             // Avoid throwing here to match original behavior, just log the error
+             // throw new Error(`WebSocket is not open. Current state: ${this.ws.readyState}`);
+             return; // Avoid calling send on a closed/closing socket
+        }
         try {
             this.ws.send(JSON.stringify(json));
             // console.debug(`JSON Object was sent to ${this.name}:`, json);
