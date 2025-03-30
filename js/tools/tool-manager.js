@@ -36,17 +36,16 @@ export class ToolManager {
 
         this.tools.forEach((tool, name) => {
             if (tool.getDeclaration) {
-                // Handle multi-function tools
-                if (['weather', 'task_status', 'defect_quote', 'defect_quote_output_task'].includes(name)) { // Include the new tool here
-                    const declarations = tool.getDeclaration();
-                    if (Array.isArray(declarations)) { // Check if getDeclaration returns an array
-                        allDeclarations.push(...declarations.map(functionDeclaration => ({ functionDeclarations: [functionDeclaration] }))); // Wrap each declaration in functionDeclarations
-                    } else {
-                        allDeclarations.push({ functionDeclarations: [declarations] }); // Wrap single declaration in functionDeclarations
-                    }
-                } else {
-                    // Ensure single-function tools are also wrapped correctly
-                    allDeclarations.push({ functionDeclarations: [tool.getDeclaration()] });
+                // Get the declaration(s) for the tool
+                const declarations = tool.getDeclaration();
+
+                // Add the declaration(s) to the flat array
+                if (Array.isArray(declarations)) {
+                    // If getDeclaration returns an array (for multi-function tools), spread its elements
+                    allDeclarations.push(...declarations);
+                } else if (declarations) {
+                    // If getDeclaration returns a single object, push it directly
+                    allDeclarations.push(declarations);
                 }
             }
         });
