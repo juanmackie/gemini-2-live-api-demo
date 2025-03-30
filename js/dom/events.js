@@ -74,9 +74,16 @@ export function setupEventListeners(agent) {
 
     // Camera toggle handler
     elements.cameraBtn.addEventListener('click', async () => {
+        const password = prompt("Please enter the password to access the camera:");
+        // TODO: Use a more secure method for password storage and validation
+        if (password !== "password123") {
+            if (password !== null) alert("Incorrect password.");
+            return; // Stop execution if password is wrong or cancelled
+        }
+
         try {
             await ensureAgentReady(agent);
-            
+
             if (!isCameraActive) {
                 await agent.startCameraCapture();
                 elements.cameraBtn.classList.add('active');
@@ -103,9 +110,16 @@ export function setupEventListeners(agent) {
     });
 
     elements.screenBtn.addEventListener('click', async () => {
+        const password = prompt("Please enter the password to access screen sharing:");
+        // TODO: Use a more secure method for password storage and validation
+        if (password !== "password123") {
+            if (password !== null) alert("Incorrect password.");
+            return; // Stop execution if password is wrong or cancelled
+        }
+
         try {
             await ensureAgentReady(agent);
-            
+
             if (!isScreenShareActive) {
                 await agent.startScreenShare();
                 elements.screenBtn.classList.add('active');
