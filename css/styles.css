@@ -412,10 +412,10 @@ body {
 
 .chat-history {
     position: absolute;
-    top: 120px;
+    top: 275px; /* Reduced height by 155px from top */
     left: 20px;
     right: 20px;
-    bottom: 275px; /* Reduced height by 155px */
+    bottom: 120px;
     background: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
     padding: 15px;
