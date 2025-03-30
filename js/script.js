@@ -12,7 +12,6 @@ const config = getConfig();
 const deepgramApiKey = getDeepgramApiKey();
 
 const toolManager = new ToolManager();
-toolManager.registerTool('googleSearch', new GoogleSearchTool());
 
 const chatManager = new ChatManager();
 
