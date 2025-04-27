@@ -76,7 +76,7 @@ export function setupEventListeners(agent) {
     elements.cameraBtn.addEventListener('click', async () => {
         const password = prompt("Please enter the password to access the camera:");
         // TODO: Use a more secure method for password storage and validation
-        if (password !== "password123") {
+        if (password !== "Geoffrey14") {
             if (password !== null) alert("Incorrect password.");
             return; // Stop execution if password is wrong or cancelled
         }
@@ -112,7 +112,7 @@ export function setupEventListeners(agent) {
     elements.screenBtn.addEventListener('click', async () => {
         const password = prompt("Please enter the password to access screen sharing:");
         // TODO: Use a more secure method for password storage and validation
-        if (password !== "password123") {
+        if (password !== "Geoffrey14") {
             if (password !== null) alert("Incorrect password.");
             return; // Stop execution if password is wrong or cancelled
         }
