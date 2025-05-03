@@ -12,7 +12,7 @@ export class DefectQuoteWebhookTool { // Rename the class
     getDeclaration() {
         return [{
             name: "defect_quote_status_checker",
-            description: "Checks the status of a defect quote using the defect quote number (e.g., Q-1234).Status' DRAFT= Actively being created by Auscoast Fire, Submitted= Ready for client review and approval, Actioned= The quote has been approved, and the works are to follow, Expired= The quote has expired due to no action and will need to be resubmitted",
+            description: "Checks the status of a defect quote using the defect quote number (e.g., Q-1234).Status' DRAFT= Actively being created by Auscoast Fire, Submitted= Ready for client review and approval, Actioned= The quote has been approved, and the works are to follow.Actioned works output a task number,tel the user this, Expired= The quote has expired due to no action and will need to be resubmitted",
             parameters: {
                 type: "object",
                 properties: {
