@@ -329,7 +329,7 @@ body {
     top: 60px; /* Position it where chat history used to start */
     left: 20px;
     right: 20px;
-    height: 400px; /* User requested 400px height */
+    height: 250px; /* 
     background: rgba(0, 0, 0, 0.5); /* Slightly different background */
     border-radius: 10px;
     padding: 10px;
