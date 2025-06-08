@@ -27,7 +27,7 @@ export const getConfig = () => ({
         speechConfig: {
             voiceConfig: { 
                 prebuiltVoiceConfig: { 
-                    voiceName: localStorage.getItem('voiceName') || 'Callirrhoe'
+                    voiceName: localStorage.getItem('voiceName') || 'Zephyr'
                 }
             }
         }
