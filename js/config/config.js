@@ -18,9 +18,9 @@ const thresholds = {
 }
 
 export const getConfig = () => ({
-    model: 'models/gemini-2.5-flash-exp-native-audio-thinking-dialog',
+    model: 'models/gemini-2.5-flash-preview-native-audio-dialog',
     generationConfig: {
-        temperature: parseFloat(localStorage.getItem('temperature')) || 1.8,
+        temperature: parseFloat(localStorage.getItem('temperature')) || 0.8,
         top_p: parseFloat(localStorage.getItem('top_p')) || 0.95,
         top_k: parseInt(localStorage.getItem('top_k')) || 65,
         responseModalities: "audio",
