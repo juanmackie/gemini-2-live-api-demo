@@ -49,7 +49,9 @@ export class GeminiWebsocketClient extends EventEmitter {
                 this.isConnecting = false;
 
                 // Configure
-                this.sendJSON({ setup: this.config });
+                const setupConfig = { ...this.config };
+                delete setupConfig.safetySettings;
+                this.sendJSON({ setup: setupConfig });
                 console.debug("Setup message with the following configuration was sent:", this.config);
                 resolve();
             });
