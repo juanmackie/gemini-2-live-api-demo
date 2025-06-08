@@ -1,6 +1,6 @@
 export const getWebsocketUrl = () => {
-    const apiKey = 'AIzaSyAkmYa7jXq-5PsQFW2l8-KXyJ3oP2O44Ho';
-    return `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=${apiKey}`;
+    const apiKey = localStorage.getItem('apiKey');
+    return `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${apiKey}`;
 };
 
 export const getDeepgramApiKey = () => {
@@ -18,9 +18,9 @@ const thresholds = {
 }
 
 export const getConfig = () => ({
-    model: 'models/gemini-2.5-flash-preview-native-audio-dialog',
+    model: 'models/gemini-2.0-flash-exp',
     generationConfig: {
-        temperature: parseFloat(localStorage.getItem('temperature')) || 0.80,
+        temperature: parseFloat(localStorage.getItem('temperature')) || 1.8,
         top_p: parseFloat(localStorage.getItem('top_p')) || 0.95,
         top_k: parseInt(localStorage.getItem('top_k')) || 65,
         responseModalities: "audio",
