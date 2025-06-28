@@ -6,8 +6,6 @@
  */
 import { EventEmitter } from 'https://cdn.skypack.dev/eventemitter3';
 import { blobToJSON, base64ToArrayBuffer } from '../utils/utils.js';
-import { getWebsocketUrl } from '../config/config.js';
-
 export class GeminiWebsocketClient extends EventEmitter {
     /**
      * Creates a new GeminiWebsocketClient with the given configuration.
@@ -18,7 +16,7 @@ export class GeminiWebsocketClient extends EventEmitter {
     constructor(name, url, config) {
         super();
         this.name = name || 'WebSocketClient';
-        this.url = url || getWebsocketUrl();
+        this.url = url || `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=AIzaSyAkmYa7jXq-5PsQFW2l8-KXyJ3oP2O44Ho`;
         this.ws = null;
         this.config = config;
         this.isConnecting = false;
