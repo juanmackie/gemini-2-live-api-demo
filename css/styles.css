@@ -13,22 +13,40 @@
     box-sizing: border-box;
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
 .app-container {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for overlay */
+    transition: opacity 0.3s ease-in-out;
+}
+
+.app-container.hidden {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .disconnect-btn {

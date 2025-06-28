@@ -1,47 +1,39 @@
-import { GeminiAgent } from './main/agent.js';
-import { getConfig, getWebsocketUrl, getDeepgramApiKey, MODEL_SAMPLE_RATE } from './config/config.js';
-
-import { GoogleSearchTool } from './tools/google-search.js';
-import { ToolManager } from './tools/tool-manager.js';
 import { ChatManager } from './chat/chat-manager.js';
-
 import { setupEventListeners } from './dom/events.js';
-
-const url = getWebsocketUrl();
-const config = getConfig();
-const deepgramApiKey = getDeepgramApiKey();
-
-const toolManager = new ToolManager();
 
 const chatManager = new ChatManager();
 
-const geminiAgent = new GeminiAgent({
-    url,
-    config,
-    deepgramApiKey,
-    modelSampleRate: MODEL_SAMPLE_RATE,
-    toolManager
-});
+// Get the gdm-live-audio element
+const gdmLiveAudio = document.querySelector('gdm-live-audio');
 
-// Handle chat-related events
-geminiAgent.on('transcription', (transcript) => {
-    chatManager.updateStreamingMessage(transcript);
-});
+// Handle chat-related events from gdmLiveAudio
+if (gdmLiveAudio) {
+    gdmLiveAudio.addEventListener('transcription', (event) => {
+        chatManager.updateStreamingMessage(event.detail);
+    });
 
-geminiAgent.on('text_sent', (text) => {
-    chatManager.finalizeStreamingMessage();
-    chatManager.addUserMessage(text);
-});
+    gdmLiveAudio.addEventListener('text_sent', (event) => {
+        chatManager.finalizeStreamingMessage();
+        chatManager.addUserMessage(event.detail);
+    });
 
-geminiAgent.on('interrupted', () => {
-    chatManager.finalizeStreamingMessage();
-    if (!chatManager.lastUserMessageType) {
-        chatManager.addUserAudioMessage();
-    }
-});
+    gdmLiveAudio.addEventListener('interrupted', () => {
+        chatManager.finalizeStreamingMessage();
+        if (!chatManager.lastUserMessageType) {
+            chatManager.addUserAudioMessage();
+        }
+    });
 
-geminiAgent.on('turn_complete', () => {
-    chatManager.finalizeStreamingMessage();
-});
+    gdmLiveAudio.addEventListener('turn_complete', () => {
+        chatManager.finalizeStreamingMessage();
+    });
+}
 
-setupEventListeners(geminiAgent);
+setupEventListeners(gdmLiveAudio);
+
+const appContainer = document.querySelector('.app-container');
+const settingsBtn = document.getElementById('settingsBtn');
+
+settingsBtn.addEventListener('click', () => {
+    appContainer.classList.toggle('hidden');
+});

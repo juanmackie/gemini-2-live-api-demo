@@ -20,29 +20,14 @@ const showConnectButton = () => {
 let isCameraActive = false;
 
 /**
- * Ensures the agent is connected and initialized
- * @param {GeminiAgent} agent - The main application agent instance
- * @returns {Promise<void>}
- */
-const ensureAgentReady = async (agent) => {
-    if (!agent.connected) {
-        await agent.connect();
-        showDisconnectButton();
-    }
-    if (!agent.initialized) {
-        await agent.initialize();
-    }
-};
-
-/**
  * Sets up event listeners for the application's UI elements
- * @param {GeminiAgent} agent - The main application agent instance
+ * @param {HTMLElement} gdmLiveAudio - The gdm-live-audio custom element instance
  */
-export function setupEventListeners(agent) {
+export function setupEventListeners(gdmLiveAudio) {
     // Disconnect handler
     elements.disconnectBtn.addEventListener('click', async () => {
         try {
-            await agent.disconnect();
+            await gdmLiveAudio.disconnect();
             showConnectButton();
             [elements.cameraBtn, elements.screenBtn, elements.micBtn].forEach(btn => btn.classList.remove('active'));
             isCameraActive = false;
@@ -54,7 +39,8 @@ export function setupEventListeners(agent) {
     // Connect handler
     elements.connectBtn.addEventListener('click', async () => {
         try {
-            await ensureAgentReady(agent);
+            await gdmLiveAudio.connect();
+            showDisconnectButton();
         } catch (error) {
             console.error('Error connecting:', error);
         }
@@ -63,8 +49,7 @@ export function setupEventListeners(agent) {
     // Microphone toggle handler
     elements.micBtn.addEventListener('click', async () => {
         try {
-            await ensureAgentReady(agent);
-            await agent.toggleMic();
+            await gdmLiveAudio.toggleRecording();
             elements.micBtn.classList.toggle('active');
         } catch (error) {
             console.error('Error toggling microphone:', error);
@@ -72,76 +57,34 @@ export function setupEventListeners(agent) {
         }
     });
 
-    // Camera toggle handler
+    // Camera toggle handler (functionality to be re-implemented)
     elements.cameraBtn.addEventListener('click', async () => {
         const password = prompt("Please enter the password to access the camera:");
-        // TODO: Use a more secure method for password storage and validation
         if (password !== "Geoffrey14") {
             if (password !== null) alert("Incorrect password.");
-            return; // Stop execution if password is wrong or cancelled
+            return;
         }
-
-        try {
-            await ensureAgentReady(agent);
-
-            if (!isCameraActive) {
-                await agent.startCameraCapture();
-                elements.cameraBtn.classList.add('active');
-            } else {
-                await agent.stopCameraCapture();
-                elements.cameraBtn.classList.remove('active');
-            }
-            isCameraActive = !isCameraActive;
-        } catch (error) {
-            console.error('Error toggling camera:', error);
-            elements.cameraBtn.classList.remove('active');
-            isCameraActive = false;
-        }
+        console.warn("Camera functionality needs to be re-implemented with gdm-live-audio.");
     });
 
-    // Screen sharing handler
-    let isScreenShareActive = false;
-    
-    // Listen for screen share stopped events (from native browser controls)
-    agent.on('screenshare_stopped', () => {
-        elements.screenBtn.classList.remove('active');
-        isScreenShareActive = false;
-        console.info('Screen share stopped');
-    });
-
+    // Screen sharing handler (functionality to be re-implemented)
     elements.screenBtn.addEventListener('click', async () => {
         const password = prompt("Please enter the password to access screen sharing:");
-        // TODO: Use a more secure method for password storage and validation
         if (password !== "Geoffrey14") {
             if (password !== null) alert("Incorrect password.");
-            return; // Stop execution if password is wrong or cancelled
+            return;
         }
-
-        try {
-            await ensureAgentReady(agent);
-
-            if (!isScreenShareActive) {
-                await agent.startScreenShare();
-                elements.screenBtn.classList.add('active');
-            } else {
-                await agent.stopScreenShare();
-                elements.screenBtn.classList.remove('active');
-            }
-            isScreenShareActive = !isScreenShareActive;
-        } catch (error) {
-            console.error('Error toggling screen share:', error);
-            elements.screenBtn.classList.remove('active');
-            isScreenShareActive = false;
-        }
+        console.warn("Screen sharing functionality needs to be re-implemented with gdm-live-audio.");
     });
 
     // Message sending handlers
     const sendMessage = async () => {
         try {
-            await ensureAgentReady(agent);
             const text = elements.messageInput.value.trim();
-            await agent.sendText(text);
-            elements.messageInput.value = '';
+            if (text) {
+                await gdmLiveAudio.sendText(text);
+                elements.messageInput.value = '';
+            }
         } catch (error) {
             console.error('Error sending message:', error);
         }
