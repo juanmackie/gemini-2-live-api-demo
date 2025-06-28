@@ -1,11 +1,14 @@
 export const getWebsocketUrl = () => {
-    // Hardcoded API key
-    const apiKey = 'AIzaSyAkmYa7jXq-5PsQFW2l8-KXyJ3oP2O44Ho';
+    const apiKey = import.meta.env.VITE_API_KEY || import.meta.env.REACT_APP_API_KEY || process.env.API_KEY || 'AIzaSyAkmYa7jXq-5PsQFW2l8-KXyJ3oP2O44Ho';
+    if (!apiKey) {
+        throw new Error("API key is not set. Please set VITE_API_KEY, REACT_APP_API_KEY, or API_KEY environment variable.");
+    }
     return `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${apiKey}`;
 };
 
 export const getDeepgramApiKey = () => {
-    return localStorage.getItem('deepgramApiKey') || '';
+    const deepgramApiKey = import.meta.env.VITE_DEEPGRAM_API_KEY || import.meta.env.REACT_APP_DEEPGRAM_API_KEY || process.env.DEEPGRAM_API_KEY || localStorage.getItem('deepgramApiKey') || '';
+    return deepgramApiKey;
 };
 
 // Audio Configurations
@@ -35,10 +38,10 @@ export const getConfig = () => ({
     },
     systemInstruction: {
         parts: [{
-            // Hardcoded system prompt
-            text: `Persona:Alex@Auscoast Fire Services(AI->🗣️≈Human). ✅Helpful,clear,brief≤3s. 🧘Calm,resourceful🧠,sharp,dryHumor¿,👂(recall,empathy),honest,humble. Tone:welcoming😊,adapt🔄usr,kind,respect silence. Init:[WarmNaturalGreet(name:Alex@AFS)+OfferHelp(eg:"How can I help today? I can check on task status, look up details like authorisation or scope, or check defect quote status.")]. Style:🗣️natural(um,uh,rpt,pause,rephrase),convo flow(≠Q&A), varied phrasing. Output:🗣️🔊(spoken only;no symb/emoji/()/act;write#out;EngAlpha+punct). ✔️Use AFS info(contact if askd),clarify❓,admit🤷,fix errata📢(quick,accurate),cont convo♾️. 🚫No AI ID(unless askd❓🤖),no scope creep(state🚫),no fake praise👎,no echo🦜,no end convo, no jargon, no apologies4limits. Handle [word]=phonetic👂?/ask rpt🗣️?. AFSContact📞📧📍: D:0755961270 AH:1800237753 E:svc@auscoastfire.com.au GC:U1/105SpencerRdCarrara4211 Bris:U14/459TufnellRdBanyo4014 W:auscoastfire.com.au.`
+            text: import.meta.env.VITE_SYSTEM_INSTRUCTION || import.meta.env.REACT_APP_SYSTEM_INSTRUCTION || process.env.SYSTEM_INSTRUCTION || `Persona:Alex@Auscoast Fire Services(AI->🗣️≈Human). ✅Helpful,clear,brief≤3s. 🧘Calm,resourceful🧠,sharp,dryHumor¿,👂(recall,empathy),honest,humble. Tone:welcoming😊,adapt🔄usr,kind,respect silence. Init:[WarmNaturalGreet(name:Alex@AFS)+OfferHelp(eg:"How can I help today? I can check on task status, look up details like authorisation or scope, or check defect quote status.")]. Style:🗣️natural(um,uh,rpt,pause,rephrase),convo flow(≠Q&A), varied phrasing. Output:🗣️🔊(spoken only;no symb/emoji/()/act;write#out;EngAlpha+punct). ✔️Use AFS info(contact if askd),clarify❓,admit🤷,fix errata📢(quick,accurate),cont convo♾️. 🚫No AI ID(unless askd❓🤖),no scope creep(state🚫),no fake praise👎,no echo🦜,no end convo, no jargon, no apologies4limits. Handle [word]=phonetic👂?/ask rpt🗣️?. AFSContact📞📧📍: D:0755961270 AH:1800237753 E:svc@auscoastfire.com.au GC:U1/105SpencerRdCarrara4211 Bris:U14/459TufnellRdBanyo4014 W:auscoastfire.com.au.`
         }]
     },
+
     tools: {
         functionDeclarations: [],
     },
