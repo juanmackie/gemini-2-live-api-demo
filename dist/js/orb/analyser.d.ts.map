@@ -1,0 +1,1 @@
+{"version":3,"file":"analyser.d.ts","sourceRoot":"","sources":["../../../js/orb/analyser.ts"],"names":[],"mappings":"AAAA;;;EAGE;AACF;;GAEG;AACH,qBAAa,QAAQ;IACnB,OAAO,CAAC,QAAQ,CAAe;IAC/B,OAAO,CAAC,YAAY,CAAK;IACzB,OAAO,CAAC,SAAS,CAAa;gBAElB,IAAI,EAAE,SAAS;IAQ3B,MAAM;IAIN,IAAI,IAAI,gCAEP;CACF"}
